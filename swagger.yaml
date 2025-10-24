@@ -9,7 +9,7 @@ info:
 servers:
   - url: http://localhost:5000/
     description: Local development server
-  - url: https://personal-expense-tracker-client-three.vercel.app
+  - url: https://personal-expense-tracker-api-066w.onrender.com
     description: remote - server
 
 tags:

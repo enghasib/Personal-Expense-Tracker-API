@@ -9,6 +9,8 @@ info:
 servers:
   - url: http://localhost:5000/
     description: Local development server
+  - url: https://personal-expense-tracker-client-three.vercel.app
+    description: remote - server
 
 tags:
   - name: Health

@@ -1,6 +1,6 @@
 @host = localhost
 @port = 5000
-@access_toke = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxODM0NDEzNi0zMTU4LTQ4MTUtYjI2Yi0xNTIyNTA4YzZiZDQiLCJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzYxMjgxMTg3LCJleHAiOjE3NjE0NTM5ODd9.aVgj5mjID8X7UQICrQxM0LUgjRtjIcgxi_4Wx_ShLPE
+@access_toke = 
 
 # health check 
 GET http://{{host}}:{{port}}/health

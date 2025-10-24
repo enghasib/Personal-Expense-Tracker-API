@@ -1,0 +1,405 @@
+openapi: 3.0.3
+info:
+  title: Expense Tracker API
+  version: 1.0.0
+  description: >
+    A simple Expense Tracker REST API built with Node.js and PostgreSQL.  
+    It supports authentication, expense management, and summary reporting.
+
+servers:
+  - url: http://localhost:5000/
+    description: Local development server
+
+tags:
+  - name: Health
+    description: Server health check
+  - name: Authentication
+    description: User registration and login
+  - name: User
+    description: User profile operations
+  - name: Expenses
+    description: Expense management operations
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Check API health
+      responses:
+        "200":
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+
+  /auth/reg:
+    post:
+      tags: [Authentication]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, email, password]
+              properties:
+                username:
+                  type: string
+                  example: test
+                email:
+                  type: string
+                  format: email
+                  example: test@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: 123456
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created successfully
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 18344136-3158-4815-b26b-1522508c6bd4
+                      username:
+                        type: string
+                        example: test
+                      email:
+                        type: string
+                        example: test@gmail.com
+        "400":
+          description: Bad request (invalid input or user already exists)
+        "500":
+          description: Internal server error
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login a registered user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: test@gmail.com
+                password:
+                  type: string
+                  example: 123456
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 18344136-3158-4815-b26b-1522508c6bd4
+                      username:
+                        type: string
+                        example: test
+                      email:
+                        type: string
+                        example: test@gmail.com
+        "401":
+          description: Invalid email or password
+        "500":
+          description: Internal server error
+
+  /profile:
+    get:
+      tags: [User]
+      summary: Get logged-in user profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successfully fetched user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 18344136-3158-4815-b26b-1522508c6bd4
+                  username:
+                    type: string
+                    example: test
+                  email:
+                    type: string
+                    example: test@gmail.com
+        "401":
+          description: Unauthorized (missing or invalid token)
+        "500":
+          description: Internal server error
+
+  /expenses:
+    post:
+      tags: [Expenses]
+      summary: Create a new expense
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, amount, category, type]
+              properties:
+                title:
+                  type: string
+                  example: residential bill
+                amount:
+                  type: number
+                  example: 10000
+                category:
+                  type: string
+                  example: resident
+                type:
+                  type: string
+                  enum: [income, expense]
+                  example: income
+                note:
+                  type: string
+                  example: optional notes
+      responses:
+        "201":
+          description: Expense created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+
+    get:
+      tags: [Expenses]
+      summary: Get all expenses for logged-in user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 10
+        - name: type
+          in: query
+          schema:
+            type: string
+            example: income
+        - name: category
+          in: query
+          schema:
+            type: string
+            example: salary
+      responses:
+        "200":
+          description: List of user expenses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 5
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Expense"
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+
+  /expenses/{id}:
+    patch:
+      tags: [Expenses]
+      summary: Update an existing expense by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: f433ce2f-0e52-4079-ad74-6a5e7f684092
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: title
+                amount:
+                  type: number
+                  example: 8000
+                category:
+                  type: string
+                  example: personal
+                type:
+                  type: string
+                  enum: [income, expense]
+                  example: expense
+                note:
+                  type: string
+                  example: note
+      responses:
+        "200":
+          description: Expense updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Expense not found
+        "500":
+          description: Internal server error
+
+    delete:
+      tags: [Expenses]
+      summary: Delete an expense by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: f433ce2f-0e52-4079-ad74-6a5e7f684092
+      responses:
+        "200":
+          description: Expense deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Expense deleted successfully
+        "401":
+          description: Unauthorized
+        "404":
+          description: Expense not found
+        "500":
+          description: Internal server error
+
+  /expenses/summary:
+    get:
+      tags: [Expenses]
+      summary: Get summary of user expenses
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Expense summary data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_income:
+                    type: number
+                    example: 50000
+                  total_expense:
+                    type: number
+                    example: 25000
+                  balance:
+                    type: number
+                    example: 25000
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Expense:
+      type: object
+      properties:
+        id:
+          type: string
+          example: f433ce2f-0e52-4079-ad74-6a5e7f684092
+        user_id:
+          type: string
+          example: 18344136-3158-4815-b26b-1522508c6bd4
+        title:
+          type: string
+          example: residential bill
+        amount:
+          type: number
+          example: 10000
+        category:
+          type: string
+          example: resident
+        type:
+          type: string
+          enum: [income, expense]
+          example: expense
+        note:
+          type: string
+          example: optional notes
+        is_large:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-10-23T18:42:00Z

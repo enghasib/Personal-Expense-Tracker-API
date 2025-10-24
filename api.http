@@ -1,0 +1,78 @@
+@host = localhost
+@port = 5000
+@access_toke = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxODM0NDEzNi0zMTU4LTQ4MTUtYjI2Yi0xNTIyNTA4YzZiZDQiLCJ1c2VybmFtZSI6InRlc3QiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzYxMjgxMTg3LCJleHAiOjE3NjE0NTM5ODd9.aVgj5mjID8X7UQICrQxM0LUgjRtjIcgxi_4Wx_ShLPE
+
+# health check 
+GET http://{{host}}:{{port}}/health
+
+###
+# create users 
+POST http://{{host}}:{{port}}/auth/reg
+Content-Type: application/json
+
+{
+    "username":"test",
+    "email":"test@gmail.com",
+    "password":"123456"
+}
+
+###
+# login users 
+POST http://{{host}}:{{port}}/auth/login
+Content-Type: application/json
+
+{
+    "email":"test@gmail.com",
+    "password":"123456"
+}
+
+### 
+# User profile
+GET http://{{host}}:{{port}}/profile
+Authorization: Bearer {{access_toke}}
+Content-Type: application/json
+###
+# create expense 
+POST http://{{host}}:{{port}}/expenses
+Content-Type: application/json
+Authorization: Bearer {{access_toke}}
+
+{
+    "title":"residential bill",
+    "amount":10000,
+    "category":"resident",
+    "type":"income",
+    "note":"optional notes"
+}
+
+###
+# show the list of expense only the login user can show there expense
+GET http://{{host}}:{{port}}/expenses?page=1&limit=10&type=income&category=salary
+Content-Type: application/json
+Authorization: Bearer {{access_toke}}
+
+###
+# update expense
+PATCH http://{{host}}:{{port}}/expenses/f433ce2f-0e52-4079-ad74-6a5e7f684092
+Content-Type: application/json
+Authorization: Bearer {{access_toke}}
+
+
+{   
+    "title":"title",
+    "amount":"8000",
+    "category":"personal",
+    "type":"expense",
+    "note":"note"
+}
+### 
+# delete expense 
+DELETE http://{{host}}:{{port}}/expenses/f433ce2f-0e52-4079-ad74-6a5e7f684092
+Content-Type: application/json
+Authorization: Bearer {{access_toke}}
+
+###
+# expense summary 
+GET  http://{{host}}:{{port}}/expenses/summary
+Content-Type: application/json
+Authorization: Bearer {{access_toke}}

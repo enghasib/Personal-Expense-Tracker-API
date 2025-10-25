@@ -38,11 +38,8 @@ class Expense {
     return result.rows[0];
   }
 
-  static async Select({
-    user_id,
-    params: { page = 1, limit = 10, type, category },
-  }) {
-    let offset = (page - 1) * limit;
+  static async Select({ user_id, params: { page, limit, type, category } }) {
+    // let offset = (page - 1) * limit;
 
     let query = "SELECT * FROM expenses WHERE user_id = $1";
     const params = [user_id];
@@ -58,14 +55,14 @@ class Expense {
 
     query += " ORDER BY created_at DESC";
 
-    if (limit) {
-      params.push(limit);
-      query += ` LIMIT $${params.length}`;
-    }
-    if (page) {
-      params.push(offset);
-      query += ` OFFSET $${params.length}`;
-    }
+    // if (limit) {
+    //   params.push(limit);
+    //   query += ` LIMIT $${params.length}`;
+    // }
+    // if (page) {
+    //   params.push(offset);
+    // query += ` OFFSET $${params.length}`;
+    // }
 
     const result = await db.query(query, params);
 

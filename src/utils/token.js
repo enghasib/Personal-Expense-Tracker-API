@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config({ debug: false });
 //JWT secret key
 const secret = process.env.ACCESS_TOKEN_SECRET;
 

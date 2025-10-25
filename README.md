@@ -21,7 +21,7 @@ A simple Expense Tracker REST API built with Node.js and PostgreSQL. It supports
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/enghasib/Personal-Expense-Tracker-API
     cd Backend
     ```
 
@@ -146,7 +146,8 @@ The base URL for all endpoints is `http://localhost:5000`.
           "title": "Monthly Salary",
           "amount": 5000,
           "category": "salary",
-          "type": "income"
+          "type": "income",
+          "note":"some notes"
         }
         ```
     *   **Example Response (201 Created):**
@@ -158,8 +159,8 @@ The base URL for all endpoints is `http://localhost:5000`.
           "amount": 5000,
           "category": "salary",
           "type": "income",
-          "note": null,
-          "is_large": true,
+          "note": "some notes",
+          "is_large": false,
           "created_at": "2025-10-23T18:42:00Z"
         }
         ```
@@ -169,23 +170,29 @@ The base URL for all endpoints is `http://localhost:5000`.
     *   **Authentication:** Bearer Token required.
     *   **Query Parameters:** `page`, `limit`, `type`, `category`.
     *   **Example Response (200 OK):**
-        ```json
-        {
-          "total": 1,
-          "data": [
-            {
-              "id": "f433ce2f-0e52-4079-ad74-6a5e7f684092",
-              "user_id": "18344136-3158-4815-b26b-1522508c6bd4",
-              "title": "Monthly Salary",
-              "amount": 5000,
-              "category": "salary",
-              "type": "income",
-              "note": null,
-              "is_large": true,
-              "created_at": "2025-10-23T18:42:00Z"
-            }
-          ]
-        }
+```json
+{
+  "message": "list of account",
+  "list_of_expenses": [
+    {
+      "id": "b1b7dbe8-a6d5-4e20-861d-c781bd08ff42",
+      "user_id": "b7487ab4-7185-4b00-82db-9ef3c2a74ad4",
+      "title": "Electricity bill",
+      "amount": "2000.00",
+      "category": "Family",
+      "type": "EXPENSE",
+      "note": "create new notes",
+      "is_large": false,
+      "created_at": "2025-10-25T02:16:26.808Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "totalPage": 1,
+    "totalItems": 1
+  }
+}
         ```
 
 *   **PATCH /expenses/{id}**
@@ -238,4 +245,4 @@ The base URL for all endpoints is `http://localhost:5000`.
 
 *   **Security:** The current implementation does not include refresh tokens. Access tokens have a limited lifetime, and users will need to log in again once they expire. For production environments, it is crucial to enable HTTPS to protect credentials and tokens in transit.
 *   **Error Handling:** The API provides generic 500 Internal Server Error responses. More specific error messages could be implemented to improve the developer experience.
-*   **`is_large` Flag:** The `Expense` model contains an `is_large` boolean flag. The logic for this is in `src/models/expense.js` and it is set to true if the amount is greater than 1000. This threshold is arbitrary and could be made configurable.
+*   **`is_large` Flag:** The `Expense` model contains an `is_large` boolean flag. It is set to true if the amount of expense is greater than 5000. This threshold is arbitrary and could be made configurable.

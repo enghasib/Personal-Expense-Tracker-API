@@ -165,37 +165,37 @@ The base URL for all endpoints is `http://localhost:5000`.
         }
         ```
 
-*   **GET /expenses**
+* **GET /expenses**
     *   **Description:** Get all expenses for the logged-in user. Supports pagination and filtering.
     *   **Authentication:** Bearer Token required.
     *   **Query Parameters:** `page`, `limit`, `type`, `category`.
-    *   **Example Response (200 OK):**
-```json
-{
-  "message": "list of account",
-  "list_of_expenses": [
-    {
-      "id": "b1b7dbe8-a6d5-4e20-861d-c781bd08ff42",
-      "user_id": "b7487ab4-7185-4b00-82db-9ef3c2a74ad4",
-      "title": "Electricity bill",
-      "amount": "2000.00",
-      "category": "Family",
-      "type": "EXPENSE",
-      "note": "create new notes",
-      "is_large": false,
-      "created_at": "2025-10-25T02:16:26.808Z"
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "totalPage": 1,
-    "totalItems": 1
-  }
-}
+  **Example Response (200 OK):**
+        ```json
+        {
+          "message": "list of account",
+          "list_of_expenses": [
+            {
+              "id": "b1b7dbe8-a6d5-4e20-861d-c781bd08ff42",
+              "user_id": "b7487ab4-7185-4b00-82db-9ef3c2a74ad4",
+              "title": "Electricity bill",
+              "amount": "2000.00",
+              "category": "Family",
+              "type": "EXPENSE",
+              "note": "create new notes",
+              "is_large": false,
+              "created_at": "2025-10-25T02:16:26.808Z"
+            }
+          ],
+          "pagination": {
+            "page": 1,
+            "limit": 10,
+            "totalPage": 1,
+            "totalItems": 1
+          }
+        }
         ```
 
-*   **PATCH /expenses/{id}**
+* **PATCH /expenses/{id}**
     *   **Description:** Update an existing expense by its ID.
     *   **Authentication:** Bearer Token required.
     *   **Example Request:**
@@ -204,8 +204,8 @@ The base URL for all endpoints is `http://localhost:5000`.
           "amount": 5500
         }
         ```
-    *   **Example Response (200 OK):**
-        ```json
+  * **Example Response (200 OK):**
+      ```json
         {
           "id": "f433ce2f-0e52-4079-ad74-6a5e7f684092",
           "user_id": "18344136-3158-4815-b26b-1522508c6bd4",
@@ -217,7 +217,7 @@ The base URL for all endpoints is `http://localhost:5000`.
           "is_large": true,
           "created_at": "2025-10-23T18:42:00Z"
         }
-        ```
+      ```
 
 *   **DELETE /expenses/{id}**
     *   **Description:** Delete an expense by its ID.
